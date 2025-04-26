@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>Teams</h1>
+
+<form method="get" style="margin-bottom: 20px;">
+    <input type="text" name="q" placeholder="Search Teams..." value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+<ul>
+    {% for team in teams %}
+        <li>{{ team.name }} - {{ team.department.name }}</li>
+    {% empty %}
+        <li>No teams found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
