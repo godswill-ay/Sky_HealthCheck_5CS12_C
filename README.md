@@ -28,19 +28,17 @@ This is a web-based system designed to help manage departments, teams, and users
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/godswill-ay/Sky_HealthCheck_C.git
+   git clone https://github.com/godswill-ay/Sky_HealthCheck_5CS12_C.git
 
 2.	**Navigate to the Project Directory**
     ```bash
-    cd healthcheck_project
-
+    cd Sky_HealthCheck_5CS12_C
 
 3.	**Create and Activate Virtual Environment**
     ```bash
-    python -m venv venv
-    source venv/bin/activate   # For Mac/Linux
-    venv\Scripts\activate      # For Windows
-
+    python3 -m venv venv
+    source venv/bin/activate         # On Mac/Linux
+    venv\Scripts\activate            # On Windows
 
 4.	**Install Dependencies**
     ```bash
@@ -51,17 +49,14 @@ This is a web-based system designed to help manage departments, teams, and users
     python manage.py makemigrations
     python manage.py migrate
 
-
 6.	**Run the Server**
     ```bash
     python manage.py runserver
-
 
 7.	**Access the Site**
     ```bash
     Open your browser and visit:
     http://127.0.0.1:8000/
-
 
 ---
 
