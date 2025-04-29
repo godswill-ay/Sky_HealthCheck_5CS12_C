@@ -3,59 +3,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}HealthCheck{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/style.css' %}">
 </head>
 <body>
     <div class="page-container">
 
-        <div class="header">
-            <div class="header-left">
-                <img src="{% static 'core/logo.png' %}" alt="Team Logo" class="logo">
+        <nav class="navbar">
+            <div class="navbar-logo">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'core/logo.png' %}" alt="Team Logo" class="logo">
+                </a>
             </div>
-            <nav class="navbar">
-                <ul class="nav-links">
-                    <li class="{% if request.path == '/' %}active{% endif %}">
-                        <a href="{% url 'home' %}">Home</a>
-                    </li>
-                    <li class="{% if request.path == '/departments/' %}active{% endif %}">
-                        <a href="{% url 'department_list' %}">Departments</a>
-                    </li>
-                    <li class="{% if request.path == '/teams/' %}active{% endif %}">
-                        <a href="{% url 'team_list' %}">Teams</a>
-                    </li>
-                    <li class="{% if request.path == '/users/' %}active{% endif %}">
-                        <a href="{% url 'user_list' %}">Users</a>
-                    </li>
-                    <li class="{% if request.path == '/about/' %}active{% endif %}">
-                        <a href="{% url 'about' %}">About</a>
-                    </li>
-            
-                    {% if user.is_authenticated %}
-                    <li>
-                        <a href="{% url 'logout' %}">Logout</a>
-                    </li>
-                    {% else %}
-                    <li class="{% if request.path == '/login/' %}active{% endif %}">
-                        <a href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="{% if request.path == '/register/' %}active{% endif %}">
-                        <a href="{% url 'register' %}">Register</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
+            <ul class="navbar-list">
+                <li class="{% if request.path == '/' %}active{% endif %}"><a href="{% url 'home' %}">Home</a></li>
+                <li class="{% if request.path == '/departments/' %}active{% endif %}"><a href="{% url 'department_list' %}">Departments</a></li>
+                <li class="{% if request.path == '/teams/' %}active{% endif %}"><a href="{% url 'team_list' %}">Teams</a></li>
+                <li class="{% if request.path == '/users/' %}active{% endif %}"><a href="{% url 'user_list' %}">Users</a></li>
+                <li class="{% if request.path == '/about/' %}active{% endif %}"><a href="{% url 'about' %}">About</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li class="{% if request.path == '/login/' %}active{% endif %}"><a href="{% url 'login' %}">Login</a></li>
+                    <li class="{% if request.path == '/register/' %}active{% endif %}"><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
 
         <main class="content-wrap">
-            {% block content %}
-            {% endblock %}
+            {% block content %}{% endblock %}
         </main>
 
         <footer class="footer">
             <p>HealthCheck System | Developed by Team 5CS12_C | © 2025</p>
         </footer>
-
     </div>
 </body>
 </html>
