@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from .models import Department, Team, CustomUser, Session, Card, Vote
 from .forms import VoteForm
@@ -14,30 +15,21 @@ def home(request):
 @login_required
 def department_list(request):
     query = request.GET.get('q')
-    if query:
-        departments = Department.objects.filter(name__icontains=query)
-    else:
-        departments = Department.objects.all()
+    departments = Department.objects.filter(name__icontains=query) if query else Department.objects.all()
     return render(request, 'core/department_list.html', {'departments': departments})
 
 
 @login_required
 def team_list(request):
     query = request.GET.get('q')
-    if query:
-        teams = Team.objects.filter(name__icontains=query)
-    else:
-        teams = Team.objects.all()
+    teams = Team.objects.filter(name__icontains=query) if query else Team.objects.all()
     return render(request, 'core/team_list.html', {'teams': teams})
 
 
 @login_required
 def user_list(request):
     query = request.GET.get('q')
-    if query:
-        users = CustomUser.objects.filter(username__icontains=query)
-    else:
-        users = CustomUser.objects.all()
+    users = CustomUser.objects.filter(username__icontains=query) if query else CustomUser.objects.all()
     return render(request, 'core/user_list.html', {'users': users})
 
 
@@ -47,33 +39,61 @@ def about(request):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+
+        if not username or not password:
+            messages.error(request, "Please enter both username and password.")
+            return redirect('login')
+
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            messages.success(request, f"Welcome back, {user.username}!")
             return redirect('home')
-        #add a message here for invalid login - need to do zaamin
-        return redirect('login')
+        else:
+            messages.error(request, "Invalid credentials or account does not exist.")
+            return redirect('login')
+
     return render(request, 'core/login.html')
 
 
 def register_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
+        first_name = request.POST.get('first_name', '').strip()
+        last_name  = request.POST.get('last_name', '').strip()
+        email      = request.POST.get('email', '').strip()
+        username   = request.POST.get('username', '').strip()
+        password1  = request.POST.get('password1', '')
+        password2  = request.POST.get('password2', '')
+
+        if not (first_name and last_name and email and username and password1 and password2):
+            messages.error(request, "All fields are required.")
+            return render(request, 'core/register.html')
 
         if password1 != password2:
-            #set error message for mismatch
-            return render(request, 'core/register.html', {'error': "Passwords do not match."})
+            messages.error(request, "Passwords do not match.")
+            return render(request, 'core/register.html')
 
         if User.objects.filter(username=username).exists():
-            # please set error message for existing user
-            return render(request, 'core/register.html', {'error': "Username already taken."})
+            messages.error(request, "That username is already taken.")
+            return render(request, 'core/register.html')
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "An account with that email already exists.")
+            return render(request, 'core/register.html')
 
-        user = User.objects.create_user(username=username, password=password1)
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1,
+        )
+
+        user.first_name = first_name
+        user.last_name  = last_name
+        user.save()
+
         login(request, user)
+        messages.success(request, "Your account has been created successfully!")
         return redirect('home')
 
     return render(request, 'core/register.html')
@@ -81,6 +101,7 @@ def register_view(request):
 
 def logout_view(request):
     logout(request)
+    messages.info(request, "You’ve been logged out.")
     return redirect('login')
 
 
@@ -105,11 +126,15 @@ def cast_vote(request):
                             'progress_better': progress_flag
                         }
                     )
-            return redirect('vote_summary')
+            return redirect('complete')
+        else:
+            messages.error(request, "Please select both a session and a team before voting.")
     else:
         form = VoteForm(user=user)
+
     cards = Card.objects.all()
     return render(request, 'core/cast_vote.html', {'form': form, 'cards': cards})
+
 
 @login_required
 def vote_summary(request):
@@ -118,6 +143,18 @@ def vote_summary(request):
     sessions = Session.objects.all()
     votes = []
     if session_id:
-        session = Session.objects.get(pk=session_id)
-        votes = Vote.objects.filter(user=user, session=session)
-    return render(request, 'core/vote_summary.html', {'sessions': sessions, 'selected_session': session_id, 'votes': votes})
+        try:
+            session = Session.objects.get(pk=int(session_id))
+            votes = Vote.objects.filter(user=user, session=session)
+        except (ValueError, Session.DoesNotExist):
+            messages.error(request, "The selected session is invalid.")
+    return render(request, 'core/vote_summary.html', {
+        'sessions': sessions,
+        'selected_session': session_id,
+        'votes': votes
+    })
+
+
+@login_required
+def complete(request):
+    return render(request, 'core/complete.html')

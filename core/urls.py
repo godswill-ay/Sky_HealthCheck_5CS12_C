@@ -32,4 +32,5 @@ urlpatterns = [
 
     path('vote/', views.cast_vote, name='cast_vote'),
     path('summary/', views.vote_summary, name='vote_summary'),
+    path('complete/', views.complete,   name='complete'), 
 ]
