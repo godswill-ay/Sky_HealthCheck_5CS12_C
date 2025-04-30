@@ -15,7 +15,6 @@ html, body {
     padding: 20px;
 }
 
-
 .footer {
     background-color: #333;
     color: white;
@@ -25,14 +24,12 @@ html, body {
     width: 100%;
 }
 
-
 .navbar {
     background-color: #333;     
     padding: 10px 20px;
     position: sticky;
     top: 0;
     z-index: 1000;
-
     display: flex;
     align-items: center;      
     justify-content: space-between; 
@@ -69,7 +66,6 @@ html, body {
 .navbar-list li.active a {
     background-color: #575757;  
 }
-
 
 .navbar-list li.active {
     background-color: #575757;
@@ -190,7 +186,6 @@ form select {
     border-radius: 4px;
 }
 
-
 .card-vote {
     background-color: #f5f5f5;
     padding: 15px;
@@ -202,7 +197,6 @@ form select {
 .card-vote h4 {
     margin-top: 0;
 }
-
 
 .vote-options {
     display: flex;
@@ -218,7 +212,6 @@ form select {
     font-size: 14px;
 }
 
-
 .progress-flag {
     margin-bottom: 10px;
 }
@@ -230,7 +223,6 @@ form select {
     font-size: 14px;
     cursor: pointer;
 }
-
 
 .btn {
     background-color: #333;
@@ -250,11 +242,13 @@ form select {
     margin: 10px;
     padding: 0;
 }
+
 .message {
     padding: 10px 15px;
     border-radius: 4px;
     margin-bottom: 10px;
 }
+
 .message.error { background-color: #f8d7da; color: #721c24; }
 .message.success { background-color: #d4edda; color: #155724; }
 .message.info { background-color: #d1ecf1; color: #0c5460; }
@@ -265,32 +259,31 @@ form select {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1100;
-  
     max-width: 90%;           
     width: auto;              
     white-space: normal;     
     word-break: break-word;  
-  
     text-align: center;       
     padding: 0 10px;         
     box-sizing: border-box;  
+    opacity: 0.95;
     transition: opacity 0.5s ease-out;
-  }
+}
 
-  .message {
+.messages.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.message {
     display: inline-block;   
     max-width: 100%;          
     padding: 12px 20px;
     border-radius: 4px;
     font-size: 14px;
-  }
+}
 
-  .messages.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-  
-  .auth-card {
+.auth-card {
     max-width: 400px;
     width: 90%;
     margin: 60px auto;
@@ -298,34 +291,34 @@ form select {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .auth-card h2 {
+}
+
+.auth-card h2 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
-  }
-  
-  .auth-card .form-group {
+}
+
+.auth-card .form-group {
     margin-bottom: 15px;
-  }
-  
-  .auth-card .form-group label {
+}
+
+.auth-card .form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
-  }
-  
-  .auth-card .form-group input {
+}
+
+.auth-card .form-group input {
     width: 100%;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-  }
-  
-  .auth-card .btn {
+}
+
+.auth-card .btn {
     width: 100%;
     padding: 12px;
     font-size: 16px;
@@ -335,68 +328,165 @@ form select {
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
-  }
-  
-  .auth-card .btn:hover {
+}
+
+.auth-card .btn:hover {
     background-color: #45a049;
-  }
-  
-  .auth-card .alt-action {
+}
+
+.auth-card .alt-action {
     text-align: center;
     margin-top: 15px;
     font-size: 14px;
-  }
-  
-  .auth-card .alt-action a {
+}
+
+.auth-card .alt-action a {
     color: #007BFF;
     text-decoration: none;
-  }
-  
-  .auth-card .alt-action a:hover {
+}
+
+.auth-card .alt-action a:hover {
     text-decoration: underline;
+}
+
+.vote-header {
+  background: linear-gradient(90deg, #ff7e00, #9f00ff, #006bff);
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+.vote-header .logo-large {
+  height: 60px;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.card-form {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+.card-vote {
+  background: #fff;
+  width: 320px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.card-progress {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 5px;
+}
+.card-title {
+  margin: 0 0 20px;
+  font-size: 20px;
+}
+
+.vote-options {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.btn-circle {
+  width: 72px;
+  height: 72px;
+  border: none;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+}
+.btn-circle.red   { background: #f44336; }
+.btn-circle.amber { background: #FFA500; }
+.btn-circle.green { background: #4CAF50; }
+
+.card-vote .form-group {
+  text-align: left;
+  margin-bottom: 15px;
+}
+.card-vote label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+.card-vote select,
+.card-vote textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.next-btn {
+  width: 100%;
+  padding: 12px;
+  background: #006bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.next-btn:hover {
+  background: #0051bb;
+}
+.vote-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
   }
   
-  .messages {
-    position: fixed;
-    top: 180px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1100;
-    max-width: 90%;
-    white-space: normal;
-    word-break: break-word;
+  .vote-options input[type="radio"] {
+    display: none;
+  }
+  .vote-options label.btn-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    line-height: 72px;      
     text-align: center;
-    padding: 0 10px;
-    box-sizing: border-box;
-    opacity: 0.95;
-    transition: opacity 0.5s ease-out;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.1s ease;
+    opacity: 0.6;            
   }
   
-  .messages.hidden {
-    opacity: 0;
-    pointer-events: none;
+  .vote-options label.red   { background: #f44336; }
+  .vote-options label.amber { background: #FFA500; }
+  .vote-options label.green { background: #4CAF50; }
+  .vote-options input[type="radio"]:checked + label.btn-circle {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
   }
   
-  .message {
-    display: inline-block;
-    max-width: 100%;
-    padding: 12px 20px;
-    border-radius: 4px;
-    font-size: 14px;
+  .next-btn {
+    margin-top: 10px;
+  }
+
+  
+  .next-btn {
+    background: linear-gradient(90deg, #ff7e00, #9f00ff, #006bff);
   }
   
-  .message.error {
-    background: #f8d7da;
-    color: #721c24;
+  .next-btn:hover {
+    background: linear-gradient(90deg, #e76e00, #8b00e5, #0053e0);
   }
   
-  .message.success {
-    background: #d4edda;
-    color: #155724;
+  .auth-card .btn,
+  button[type="submit"] {
+    background: linear-gradient(90deg, #ff7e00, #9f00ff, #006bff);
   }
   
-  .message.info {
-    background: #d1ecf1;
-    color: #0c5460;
+  .auth-card .btn:hover,
+  button[type="submit"]:hover {
+    background: linear-gradient(90deg, #e76e00, #8b00e5, #0053e0);
   }
-  

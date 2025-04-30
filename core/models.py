@@ -53,7 +53,7 @@ class Vote(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='votes'
-    )
+    )#zq
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='votes')
     card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name='votes')
     vote = models.CharField(max_length=10, choices=VOTE_CHOICES)

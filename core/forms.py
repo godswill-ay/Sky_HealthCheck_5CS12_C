@@ -2,7 +2,7 @@
 from django import forms
 from .models import Vote, Session, Card, Team
 from django.contrib.auth import get_user_model
-
+#zq
 class VoteForm(forms.Form):
     session = forms.ModelChoiceField(
         queryset=Session.objects.all(),

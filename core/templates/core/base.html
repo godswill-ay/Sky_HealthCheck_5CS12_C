@@ -37,15 +37,6 @@
             <li class="{% if request.path == '/summary/' %}active{% endif %}">
               <a href="{% url 'vote_summary' %}">Summary</a>
             </li>
-            <li class="{% if request.path == '/departments/' %}active{% endif %}">
-              <a href="{% url 'department_list' %}">Departments</a>
-            </li>
-            <li class="{% if request.path == '/teams/' %}active{% endif %}">
-              <a href="{% url 'team_list' %}">Teams</a>
-            </li>
-            <li class="{% if request.path == '/users/' %}active{% endif %}">
-              <a href="{% url 'user_list' %}">Users</a>
-            </li>
           {% endif %}
       
           <li class="{% if request.path == '/about/' %}active{% endif %}">
@@ -66,6 +57,7 @@
           {% endif %}
         </ul>
       </nav>
+      
 
     <main class="content-wrap">
       {% block content %}{% endblock %}

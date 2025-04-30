@@ -1,13 +1,14 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import get_user_model
 from django.contrib import messages
-from django.contrib.auth import get_user_model, authenticate, login, logout
 from .models import Department, Team, CustomUser, Session, Card, Vote
 from .forms import VoteForm
 
 User = get_user_model()
 
-
+# zq
 def home(request):
     return render(request, 'core/home.html')
 
@@ -106,35 +107,59 @@ def logout_view(request):
 
 
 @login_required
+@login_required
 def cast_vote(request):
     user = request.user
+    cards = list(Card.objects.all())
+    total = len(cards)
+
     if request.method == 'POST':
-        form = VoteForm(request.POST, user=user)
-        if form.is_valid():
-            session = form.cleaned_data['session']
-            team = form.cleaned_data['team']
-            for card in Card.objects.all():
-                vote_value = request.POST.get(f'vote_{card.id}')
-                progress_flag = request.POST.get(f'progress_{card.id}') == 'on'
-                if vote_value:
-                    Vote.objects.update_or_create(
-                        user=user,
-                        session=session,
-                        card=card,
-                        defaults={
-                            'vote': vote_value,
-                            'progress_better': progress_flag
-                        }
-                    )
-            return redirect('complete')
-        else:
-            messages.error(request, "Please select both a session and a team before voting.")
+        step       = int(request.POST.get('step', 0))
+        session_id = request.POST.get('session', '')
+        team_id    = request.POST.get('team', '')
     else:
-        form = VoteForm(user=user)
+        step       = int(request.GET.get('step', 0))
+        session_id = request.GET.get('session', '')
+        team_id    = request.GET.get('team', '')
 
-    cards = Card.objects.all()
-    return render(request, 'core/cast_vote.html', {'form': form, 'cards': cards})
+    first_session = Session.objects.first()
+    first_team    = Team.objects.first()
+    session_id = session_id or (first_session.id if first_session else None)
+    team_id    = team_id    or (first_team.id    if first_team    else None)
 
+
+    if request.method == 'POST':
+        card       = cards[step]
+        vote_value = request.POST.get('vote')
+        trend      = request.POST.get('trend', '')
+        comment    = request.POST.get('comment', '').strip()
+
+        if vote_value:
+            Vote.objects.update_or_create(
+                user=user,
+                session_id=session_id,
+                card=card,
+                defaults={
+                    'vote': vote_value,
+                    'progress_better': (trend == 'better'),
+                    'comment': comment
+                }
+            )
+        step += 1
+    if step >= total:
+        return redirect('complete')
+
+    session = get_object_or_404(Session, pk=session_id)
+    team    = get_object_or_404(Team,    pk=team_id)
+
+    card = cards[step]
+    return render(request, 'core/cast_vote.html', {
+        'card': card,
+        'step': step,
+        'total': total,
+        'session': session,
+        'team': team,
+    })
 
 @login_required
 def vote_summary(request):
@@ -154,7 +179,7 @@ def vote_summary(request):
         'votes': votes
     })
 
-
+#zq
 @login_required
 def complete(request):
     return render(request, 'core/complete.html')
