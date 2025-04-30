@@ -1,3 +1,4 @@
+##Zaamin Qadeer w1906890
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Department, Team, Session, Card, Vote

@@ -1,3 +1,4 @@
+#Zaamin Qadeer w1906890
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -62,7 +63,7 @@ class Vote(models.Model):
     comment = models.TextField(blank=True) 
 
     class Meta:
-        unique_together = ('user', 'session', 'card')  # one vote per user/session/card
+        unique_together = ('user', 'session', 'card') 
 
     def __str__(self):
         return f"{self.user.username} - {self.card.title} ({self.vote}) on {self.session}"
