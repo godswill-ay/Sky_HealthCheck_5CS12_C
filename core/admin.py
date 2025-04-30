@@ -1,16 +1,20 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Department, Team, CustomUser
-
-admin.site.register(Department)
-admin.site.register(Team)
+from .models import CustomUser, Department, Team, Session, Card, Vote
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    model = CustomUser
     fieldsets = UserAdmin.fieldsets + (
-        ('Role Info', {'fields': ('role', 'team')}),
+        (None, {'fields': ('role',)}),
     )
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Role Info', {'fields': ('role', 'team')}),
-    )
+    list_display = ('username', 'email', 'role', 'is_staff', 'is_active')
+
+admin.site.register(Department)
+admin.site.register(Team)
+admin.site.register(Session)
+admin.site.register(Card)
+
+@admin.register(Vote)
+class VoteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'session', 'card', 'vote', 'progress_better', 'timestamp')
+    list_filter  = ('vote', 'session', 'card')

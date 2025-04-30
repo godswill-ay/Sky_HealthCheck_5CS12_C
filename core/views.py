@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, authenticate, login, logout
-from .models import Department, Team, CustomUser
+from .models import Department, Team, CustomUser, Session, Card, Vote
+from .forms import VoteForm
 
 User = get_user_model()
 
@@ -52,7 +53,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             return redirect('home')
-        # optionally add a message here for invalid login
+        #add a message here for invalid login - need to do zaamin
         return redirect('login')
     return render(request, 'core/login.html')
 
@@ -64,14 +65,13 @@ def register_view(request):
         password2 = request.POST['password2']
 
         if password1 != password2:
-            # optional: set error message for mismatch
+            #set error message for mismatch
             return render(request, 'core/register.html', {'error': "Passwords do not match."})
 
         if User.objects.filter(username=username).exists():
-            # optional: set error message for existing user
+            # please set error message for existing user
             return render(request, 'core/register.html', {'error': "Username already taken."})
 
-        # Create and log in the new user
         user = User.objects.create_user(username=username, password=password1)
         login(request, user)
         return redirect('home')
@@ -82,3 +82,42 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+
+@login_required
+def cast_vote(request):
+    user = request.user
+    if request.method == 'POST':
+        form = VoteForm(request.POST, user=user)
+        if form.is_valid():
+            session = form.cleaned_data['session']
+            team = form.cleaned_data['team']
+            for card in Card.objects.all():
+                vote_value = request.POST.get(f'vote_{card.id}')
+                progress_flag = request.POST.get(f'progress_{card.id}') == 'on'
+                if vote_value:
+                    Vote.objects.update_or_create(
+                        user=user,
+                        session=session,
+                        card=card,
+                        defaults={
+                            'vote': vote_value,
+                            'progress_better': progress_flag
+                        }
+                    )
+            return redirect('vote_summary')
+    else:
+        form = VoteForm(user=user)
+    cards = Card.objects.all()
+    return render(request, 'core/cast_vote.html', {'form': form, 'cards': cards})
+
+@login_required
+def vote_summary(request):
+    user = request.user
+    session_id = request.GET.get('session')
+    sessions = Session.objects.all()
+    votes = []
+    if session_id:
+        session = Session.objects.get(pk=session_id)
+        votes = Vote.objects.filter(user=user, session=session)
+    return render(request, 'core/vote_summary.html', {'sessions': sessions, 'selected_session': session_id, 'votes': votes})

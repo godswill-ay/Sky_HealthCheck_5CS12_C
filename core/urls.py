@@ -17,6 +17,9 @@ Including another URLconf
 from django.urls import path
 from . import views
 
+from django.urls import path
+from . import views
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('departments/', views.department_list, name='department_list'),
@@ -26,4 +29,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('logout/', views.logout_view, name='logout'),
+
+    path('vote/', views.cast_vote, name='cast_vote'),
+    path('summary/', views.vote_summary, name='vote_summary'),
 ]
