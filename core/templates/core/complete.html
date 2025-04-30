@@ -1,10 +1,15 @@
 {% extends "core/base.html" %}
 {% block title %}Complete{% endblock %}
+
 {% block content %}
-  <div class="thank-you">
+
+  <div class="vote-header" style="margin-bottom: 20px;">
     <h2>Health Check Complete</h2>
+  </div>
+
+  <div class="thank-you">
     <p>Thank you for participating in the Sky Health Check!</p>
-    <p>Your feedback will help us keep our teams healthy and improving.</p>
-    <a href="{% url 'home' %}" class="btn">Return to Dashboard</a>
+    <p>Your feedback will help us keep our teams healthy and help us improve them.</p>
+    <a href="{% url 'home' %}" class="btn next-btn">Return to Dashboard</a>
   </div>
 {% endblock %}

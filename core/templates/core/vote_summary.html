@@ -1,37 +1,89 @@
-{% extends 'core/base.html' %}
+{% extends "core/base.html" %}
+{% load static %}
+
 {% block title %}Vote Summary{% endblock %}
+
+{% block banner %}
+  <div class="vote-header">
+    <h2>Vote Summary</h2>
+  </div>
+{% endblock %}
+
 {% block content %}
-  <h2>Your Vote Summary</h2>
   <form method="get" class="form-inline">
     <label for="session">Select Session:</label>
-    <select name="session" onchange="this.form.submit()">
+    <select name="session" id="session" onchange="this.form.submit()">
       <option value="">-- choose session --</option>
       {% for s in sessions %}
-        <option value="{{ s.id }}" {% if s.id|stringformat:"s" == selected_session %}selected{% endif %}>{{ s }}</option>
+        <option
+          value="{{ s.id }}"
+          {% if s.id == selected_session %}selected{% endif %}
+        >
+          {{ s }}
+        </option>
       {% endfor %}
     </select>
   </form>
 
   {% if votes %}
-    <table class="summary-table">
-      <thead>
-        <tr>
-          <th>Card</th><th>Your Vote</th><th>Progress</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for v in votes %}
-          <tr>
-            <td>{{ v.card.title }}</td>
-            <td class="vote-{{ v.vote }}">{{ v.get_vote_display }}</td>
-            <td>{{ v.progress_better|yesno:"Yes,No" }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    {% if selected_session %}
-      <p>No votes found for this session.</p>
-    {% endif %}
+ 
+    <div class="summary-container" style="margin-top: 2rem;">
+      <canvas id="voteChart" width="600" height="300"></canvas>
+    </div>
+
+    {{ chart_data|json_script:"chart-data" }}
+  {% elif selected_session %}
+    <p>No votes found for this session.</p>
   {% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    (function(){
+      const raw = document.getElementById('chart-data');
+      if (!raw) return;
+
+      const dataObj = JSON.parse(raw.textContent);
+      const ctx = document.getElementById('voteChart');
+      if (!ctx) return;
+
+      new Chart(ctx.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Red','Amber','Green'],
+          datasets: [{
+            label: 'Number of Votes',
+            data: [
+              dataObj.Red,
+              dataObj.Amber,
+              dataObj.Green
+            ],
+            backgroundColor: [
+              'rgba(244, 67, 54, 0.8)',
+              'rgba(255, 165, 0, 0.8)',
+              'rgba(76, 175, 80, 0.8)'
+            ],
+            borderColor: [
+              'rgba(244, 67, 54, 1)',
+              'rgba(255, 165, 0, 1)',
+              'rgba(76, 175, 80, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    })();
+  </script>
 {% endblock %}

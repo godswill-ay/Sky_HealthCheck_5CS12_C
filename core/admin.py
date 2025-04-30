@@ -16,5 +16,5 @@ admin.site.register(Card)
 
 @admin.register(Vote)
 class VoteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'session', 'card', 'vote', 'progress_better', 'timestamp')
+    list_display = ('user', 'session', 'card', 'vote', 'progress_better')
     list_filter  = ('vote', 'session', 'card')

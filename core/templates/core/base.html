@@ -58,6 +58,9 @@
         </ul>
       </nav>
       
+      {% block banner %}{% endblock %}
+  
+
 
     <main class="content-wrap">
       {% block content %}{% endblock %}
@@ -80,5 +83,6 @@
       });
     });
   </script>
+  {% block extra_scripts %}{% endblock %}
 </body>
 </html>

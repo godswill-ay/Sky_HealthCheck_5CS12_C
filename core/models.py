@@ -54,11 +54,12 @@ class Vote(models.Model):
         on_delete=models.CASCADE,
         related_name='votes'
     )#zq
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='votes')
-    card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name='votes')
-    vote = models.CharField(max_length=10, choices=VOTE_CHOICES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    session = models.ForeignKey('Session', on_delete=models.CASCADE)
+    card = models.ForeignKey('Card', on_delete=models.CASCADE)
+    vote = models.CharField(max_length=5, choices=VOTE_CHOICES)
     progress_better = models.BooleanField(default=False)
-    timestamp = models.DateTimeField(auto_now=True)
+    comment = models.TextField(blank=True) 
 
     class Meta:
         unique_together = ('user', 'session', 'card')  # one vote per user/session/card

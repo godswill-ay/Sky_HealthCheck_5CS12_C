@@ -490,3 +490,16 @@ form select {
   button[type="submit"]:hover {
     background: linear-gradient(90deg, #e76e00, #8b00e5, #0053e0);
   }
+
+  .page-banner {
+    background: linear-gradient(90deg, #ff7e00, #9f00ff, #006bff);
+    padding: 20px 0;
+    text-align: center;
+    color: #fff;
+  }
+  
+  .page-banner h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: normal;
+  }

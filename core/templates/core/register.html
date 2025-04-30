@@ -2,50 +2,60 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-  <div class="auth-card">
-    <h2>Register</h2>
-    <form method="post">
-      {% csrf_token %}
-      {% if messages %}
-        <div class="messages">
-          {% for msg in messages %}
-            <div class="message {{ msg.tags }}">{{ msg }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-
-      <div class="form-group">
-        <label for="first_name">First Name:</label>
-        <input type="text" id="first_name" name="first_name" required>
+<div class="auth-card">
+  <h2>Register</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% if messages %}
+      <div class="messages">
+        {% for msg in messages %}
+          <div class="message {{ msg.tags }}">{{ msg }}</div>
+        {% endfor %}
       </div>
+    {% endif %}
 
-      <div class="form-group">
-        <label for="last_name">Last Name:</label>
-        <input type="text" id="last_name" name="last_name" required>
-      </div>
+    <div class="form-group">
+      <label for="first_name">First Name:</label>
+      <input type="text" id="first_name" name="first_name" required>
+    </div>
 
-      <div class="form-group">
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email" required>
-      </div>
+    <div class="form-group">
+      <label for="last_name">Last Name:</label>
+      <input type="text" id="last_name" name="last_name" required>
+    </div>
 
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-      </div>
+    <div class="form-group">
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
 
-      <div class="form-group">
-        <label for="password1">Password:</label>
-        <input type="password" id="password1" name="password1" required>
-      </div>
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+    </div>
 
-      <div class="form-group">
-        <label for="password2">Confirm Password:</label>
-        <input type="password" id="password2" name="password2" required>
-      </div>
+    <div class="form-group">
+      <label for="role">Role:</label>
+      <select id="role" name="role" required>
+        <option value="engineer">Engineer</option>
+        <option value="team_leader">Team Leader</option>
+        <option value="dept_leader">Department Leader</option>
+        <option value="senior_manager">Senior Manager</option>
+      </select>
+    </div>
 
-      <button type="submit" class="btn">Register</button>
-      <p class="alt-action">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
-    </form>
-  </div>
+    <div class="form-group">
+      <label for="password1">Password:</label>
+      <input type="password" id="password1" name="password1" required>
+    </div>
+
+    <div class="form-group">
+      <label for="password2">Confirm Password:</label>
+      <input type="password" id="password2" name="password2" required>
+    </div>
+
+    <button type="submit" class="btn">Register</button>
+    <p class="alt-action">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+  </form>
+</div>
 {% endblock %}

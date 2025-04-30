@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.db.models import Count
 from .models import Department, Team, CustomUser, Session, Card, Vote
 from .forms import VoteForm
 
@@ -65,10 +66,11 @@ def register_view(request):
         last_name  = request.POST.get('last_name', '').strip()
         email      = request.POST.get('email', '').strip()
         username   = request.POST.get('username', '').strip()
+        role       = request.POST.get('role', '').strip()
         password1  = request.POST.get('password1', '')
         password2  = request.POST.get('password2', '')
 
-        if not (first_name and last_name and email and username and password1 and password2):
+        if not (first_name and last_name and email and username and role and password1 and password2):
             messages.error(request, "All fields are required.")
             return render(request, 'core/register.html')
 
@@ -88,9 +90,9 @@ def register_view(request):
             email=email,
             password=password1,
         )
-
         user.first_name = first_name
         user.last_name  = last_name
+        user.role       = role
         user.save()
 
         login(request, user)
@@ -163,20 +165,35 @@ def cast_vote(request):
 
 @login_required
 def vote_summary(request):
-    user = request.user
-    session_id = request.GET.get('session')
     sessions = Session.objects.all()
-    votes = []
-    if session_id:
-        try:
-            session = Session.objects.get(pk=int(session_id))
-            votes = Vote.objects.filter(user=user, session=session)
-        except (ValueError, Session.DoesNotExist):
-            messages.error(request, "The selected session is invalid.")
+
+    selected = request.GET.get('session')
+    try:
+        selected_session = int(selected) if selected else None
+    except ValueError:
+        selected_session = None
+
+    votes = Vote.objects.none()
+    chart_data = {'Red': 0, 'Amber': 0, 'Green': 0}
+
+    if selected_session:
+        session = get_object_or_404(Session, pk=selected_session)
+        votes = Vote.objects.filter(session=session)
+
+        agg = (
+            votes
+            .values('vote')
+            .annotate(count=Count('vote'))
+        )
+        for entry in agg:
+            key = entry['vote'].capitalize() 
+            chart_data[key] = entry['count']
+
     return render(request, 'core/vote_summary.html', {
         'sessions': sessions,
-        'selected_session': session_id,
-        'votes': votes
+        'selected_session': selected_session,
+        'votes': votes,
+        'chart_data': chart_data,
     })
 
 #zq
