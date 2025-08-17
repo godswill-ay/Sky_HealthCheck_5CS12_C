@@ -63,9 +63,6 @@ This is a web-based system designed to help manage departments, teams, and users
 ## Project Team
 - Godswill Ayogu
 - Zaamin Qadeer
-- Krystian Dolinski
-- Fares Bouchair
-- Mohammed Shahin
 
 ---
 
